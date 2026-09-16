@@ -1,0 +1,41 @@
+1083:function gatherQuotationData() {
+1084-const type = document.querySelector('input[name="i-type"]:checked')?.value || "일반";
+1085-const name = document.getElementById('i-name').value || '';
+1086-const cPhone = document.getElementById('i-c-phone').value || '';
+1087-const phone = document.getElementById('i-phone').value || '031-767-1044';
+1088-const manager = document.getElementById('i-manager').value || '';
+1089-const no = document.getElementById('i-no').value || '';
+1090-
+1091-const lumpItems = []; let itemSummary = '';
+1092-document.querySelectorAll('.l-name').forEach((el, i) => {
+1093-const n = el.value || ''; const m = document.querySelectorAll('.l-model')[i].value || ''; const qty = parseInt(document.querySelectorAll('.l-qty')[i].value) || 1; const p = parseInt(document.querySelectorAll('.l-price')[i].value) || 0;
+1094-if (n || p > 0) { lumpItems.push({ name: n, model: m, qty, price: p }); if (!itemSummary && n) itemSummary = n; }
+1095-});
+1096-if (lumpItems.length > 1) itemSummary += ` 외 ${lumpItems.length - 1}건`;
+1097-
+1098-const lumpCard = document.getElementById('l-card')?.value || '미정(상담안함)'; const lumpDc = getVal('l-dc'); const lumpPtTot = getVal('l-pt-tot'); const lumpPtUse = getVal('l-pt-use'); const lumpCash = getVal('l-cash');
+1099-const lumpHp = Array.from(document.querySelectorAll('.hp-lump-row')).map(row => ({ val: row.querySelector('.hp-val').value, cnt: parseInt(row.querySelector('.hp-cnt').value) }));
+1100-
+1101-const subItems = [];
+1102-document.querySelectorAll('.s-name').forEach((el, i) => {
+1103-const n = el.value || ''; const m = document.querySelectorAll('.s-model')[i].value || ''; const p = parseInt(document.querySelectorAll('.s-price')[i].value) || 0; const mo = document.querySelectorAll('.s-months')[i].value || '60';
+1104-if (n || p > 0) { subItems.push({ name: n, model: m, price: p, months: mo }); if (!itemSummary && n) itemSummary = n + '(구독)'; }
+1105-});
+1106-
+1107-const subCardCorp = document.getElementById('s-card-corp')?.value || 'none'; const subCardTier = document.getElementById('s-card-tier')?.value || '0'; const subCash = getVal('s-cash');
+1108-const subHp = Array.from(document.querySelectorAll('.hp-sub-row')).map(row => ({ val: row.querySelector('.hp-val').value, cnt: parseInt(row.querySelector('.hp-cnt').value) }));
+1109-const memoCust = document.getElementById('i-memo-customer')?.value || '';
+1110-const memoMy = document.getElementById('i-memo')?.value || '';
+1111-return {
+1112-id: 'Q-' + Date.now(), type, name, cPhone, phone, manager, no, itemSummary: itemSummary || '가전 견적',
+1113-totalPrice: 0, payPrice: 0, finalPrice: parseInt(document.getElementById(type === '일반' ? 's3-net-lump' : 's3-net-sub')?.innerText.replace(/[^0-9]/g, '') || 0), netPrice: parseInt(document.getElementById(type === '일반' ? 's3-net-lump' : 's3-net-sub')?.innerText.replace(/[^0-9]/g, '') || 0), lumpSum: 0, subSum: 0,
+1114-lumpItems, lumpCard, lumpDc, lumpPtTot, lumpPtUse, lumpCash, lumpHp, subItems, subCardCorp, subCardTier, subCash, subHp, memoCust, memoMy
+1115-};
+1116-}
+1117-
+1118-function applyQuotationData(data) {
+1119-if (!data) return;
+1120-const typeRadio = document.querySelector(`input[name="i-type"][value="${data.type || '일반'}"]`); if (typeRadio) typeRadio.checked = true;
+1121-document.getElementById('i-name').value = data.name || ''; document.getElementById('i-c-phone').value = data.cPhone || '';
+1122-document.getElementById('i-phone').value = data.phone || '031-767-1044';
+1123-document.getElementById('i-manager').value = data.manager || ''; document.getElementById('i-no').value = data.no || '';

@@ -16,6 +16,7 @@
 
 <style>
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+.hidden { display: none !important; }
 body {
 font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
 background-color: #f1f5f9;
@@ -190,9 +191,15 @@ details > summary::-webkit-details-marker { display: none; }
 <button type="button" onclick="addHpRow('lump')" class="text-xs bg-rose-100 border border-rose-300 text-rose-700 px-2 py-0.5 rounded shadow-sm">+ 결합추가</button>
 </div>
 <div id="lump-hp-container" class="space-y-1 mb-2"></div>
-<div class="bg-rose-100/70 p-2.5 rounded text-right">
-<p class="text-[11px] text-rose-800">150개월 만기 완납 환급액 (100% 전액)</p>
+<div class="bg-rose-100/70 p-2.5 rounded flex justify-between items-end">
+<div class="text-left">
+<p class="text-[10px] text-rose-600 font-bold mb-0.5">상조 월 납입금</p>
+<p class="text-sm font-bold text-rose-800" id="lump-hp-month">0원</p>
+</div>
+<div class="text-right">
+<p class="text-[11px] text-rose-800 font-bold mb-0.5">150개월 만기 완납 환급액 (100% 전액)</p>
 <p class="text-base font-extrabold text-rose-700" id="lump-hp-preview">0원</p>
+</div>
 </div>
 </div>
 </div>
@@ -235,9 +242,15 @@ details > summary::-webkit-details-marker { display: none; }
 <button type="button" onclick="addHpRow('sub')" class="text-xs bg-blue-100 border border-blue-300 text-blue-700 px-2 py-0.5 rounded shadow-sm">+ 결합추가</button>
 </div>
 <div id="sub-hp-container" class="space-y-1 mb-2"></div>
-<div class="bg-blue-100/70 p-2.5 rounded text-right">
-<p class="text-[11px] text-blue-800">150개월 만기 완납 환급액 (100% 전액)</p>
+<div class="bg-blue-100/70 p-2.5 rounded flex justify-between items-end">
+<div class="text-left">
+<p class="text-[10px] text-blue-600 font-bold mb-0.5">상조 월 납입금</p>
+<p class="text-sm font-bold text-blue-800" id="sub-hp-month">0원</p>
+</div>
+<div class="text-right">
+<p class="text-[11px] text-blue-800 font-bold mb-0.5">150개월 만기 완납 환급액 (100% 전액)</p>
 <p class="text-base font-extrabold text-blue-700" id="sub-hp-preview">0원</p>
+</div>
 </div>
 </div>
 </div>
@@ -322,14 +335,14 @@ details > summary::-webkit-details-marker { display: none; }
 <tr><td class="bg-gray-50 text-gray-800" id="s2-card-label">(-) 제휴카드 할인</td><td class="text-right text-blue-600" id="s2-card">0 원</td></tr>
 <tr id="s2-hp-row"><td class="bg-gray-50 font-bold text-blue-700">(-) 하이프리드 매월 페이백 (웅진프리드 35회)</td><td class="text-right text-blue-600 font-bold" id="s2-hp">0 원</td></tr>
 <tr class="border-t-2 border-gray-400"><td class="bg-blue-50 font-extrabold text-blue-900 text-left" colspan="2">▼ 고객 체감 월 구독료 구간별 안내</td></tr>
-<tr><td class="bg-gray-100 font-bold text-gray-900">① 1 ~ 35개월 차 (풀 혜택 적용)</td><td class="text-right font-extrabold text-base text-rose-700" id="s2-p1">월 0 원</td></tr>
-<tr><td class="bg-gray-100 font-bold text-gray-900" id="s2-p2-title">② 36개월 차 (상조 페이백 종료)</td><td class="text-right font-extrabold text-base text-orange-600" id="s2-p2">월 0 원</td></tr>
-<tr id="row-p3" class="hidden"><td class="bg-gray-100 font-bold text-gray-900">③ 37 ~ 60개월 차 (60개월 약정 상품만 해당)</td><td class="text-right font-extrabold text-base text-gray-800" id="s2-p3">월 0 원</td></tr>
+<tbody id="s2-periods-tbody"></tbody>
 </table>
 <table class="w-full print-table mb-3">
 <tr><td class="bg-gray-50 text-gray-800">전체 구독 총 계약금액</td><td class="text-right text-gray-900 font-bold" id="s2-contract">0 원</td></tr>
-<tr><td class="bg-gray-50 text-gray-800">(-) 결제금액별 캐시백 (삼성/신한 등 제휴)</td><td class="text-right text-blue-600" id="s2-auto-cash">0 원</td></tr>
-<tr><td class="bg-gray-50 text-gray-800">(-) 추가 캐시백 (배송익월말)</td><td class="text-right text-blue-600" id="s2-extra-cash">0 원</td></tr>
+<tr id="s2-tot-card-row" class="hidden"><td class="bg-gray-50 text-gray-800">(-) 제휴카드 총 혜택액</td><td class="text-right text-blue-600" id="s2-tot-card">0 원</td></tr>
+<tr id="s2-tot-hp-row" class="hidden"><td class="bg-gray-50 text-gray-800">(-) 하이프리드 총 혜택액</td><td class="text-right text-blue-600" id="s2-tot-hp">0 원</td></tr>
+<tr id="s2-auto-cash-row" class="hidden"><td class="bg-gray-50 text-gray-800">(-) 결제금액별 캐시백 (삼성/신한 등)</td><td class="text-right text-blue-600" id="s2-auto-cash">0 원</td></tr>
+<tr id="s2-extra-cash-row" class="hidden"><td class="bg-gray-50 text-gray-800">(-) 추가 캐시백 (배송익월말)</td><td class="text-right text-blue-600" id="s2-extra-cash">0 원</td></tr>
 <tr class="border-t-2 border-gray-400"><td class="bg-gray-100 font-extrabold text-gray-900">★ 고객 약정만기 총 체감 순비용</td><td class="text-right font-extrabold text-xl text-rose-700" id="s2-final-total">0 원</td></tr>
 </table>
 
@@ -1005,7 +1018,7 @@ f.quotes.slice().reverse().forEach(q => {
 const qDiv = document.createElement('div');
 qDiv.className = "flex justify-between items-center bg-gray-50 p-2.5 rounded border border-gray-100";
 qDiv.innerHTML = `<div class="flex-1 min-w-0 pr-2"> <p class="text-xs font-bold text-gray-800 truncate">${q.title}</p>
-<p class="text-[10px] text-gray-500 mt-0.5">${q.date} · <span class="text-rose-600 font-semibold">${format(q.data.netPrice || q.data.finalPrice)}원</span></p>
+<p class="text-[10px] text-gray-500 mt-0.5">${q.date} · <span class="text-rose-600 font-semibold">${(q.data.netPrice || q.data.finalPrice || 0) < 0 ? `0원 (+${format(Math.abs(q.data.netPrice || q.data.finalPrice || 0))}원 혜택)` : format(q.data.netPrice || q.data.finalPrice) + '원'}</span></p>
 </div>
 <div class="flex gap-1">
 <button type="button" onclick="loadQuotation('${f.id}', '${q.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1 px-2 rounded shadow text-[10px]">불러오기</button>
@@ -1084,6 +1097,7 @@ if (lumpItems.length > 1) itemSummary += ` 외 ${lumpItems.length - 1}건`;
 
 const lumpCard = document.getElementById('l-card')?.value || '미정(상담안함)'; const lumpDc = getVal('l-dc'); const lumpPtTot = getVal('l-pt-tot'); const lumpPtUse = getVal('l-pt-use'); const lumpCash = getVal('l-cash');
 const lumpHp = Array.from(document.querySelectorAll('.hp-lump-row')).map(row => ({ val: row.querySelector('.hp-val').value, cnt: parseInt(row.querySelector('.hp-cnt').value) }));
+const lumpBenefits = Array.from(document.querySelectorAll('.benefit-lump-row')).map(row => ({ type: row.querySelector('.b-type').value, desc: row.querySelector('.b-desc').value, val: parseInt(row.querySelector('.b-val').value) || 0 }));
 
 const subItems = [];
 document.querySelectorAll('.s-name').forEach((el, i) => {
@@ -1097,8 +1111,8 @@ const memoCust = document.getElementById('i-memo-customer')?.value || '';
 const memoMy = document.getElementById('i-memo')?.value || '';
 return {
 id: 'Q-' + Date.now(), type, name, cPhone, phone, manager, no, itemSummary: itemSummary || '가전 견적',
-totalPrice: 0, payPrice: 0, finalPrice: parseInt(document.getElementById(type === '일반' ? 's3-net-lump' : 's3-net-sub')?.innerText.replace(/[^0-9]/g, '') || 0), netPrice: parseInt(document.getElementById(type === '일반' ? 's3-net-lump' : 's3-net-sub')?.innerText.replace(/[^0-9]/g, '') || 0), lumpSum: 0, subSum: 0,
-lumpItems, lumpCard, lumpDc, lumpPtTot, lumpPtUse, lumpCash, lumpHp, subItems, subCardCorp, subCardTier, subCash, subHp, memoCust, memoMy
+totalPrice: 0, payPrice: 0, finalPrice: type === '일반' ? (window.currentNetPriceLump || 0) : (window.currentNetPriceSub || 0), netPrice: type === '일반' ? (window.currentNetPriceLump || 0) : (window.currentNetPriceSub || 0), lumpSum: 0, subSum: 0,
+lumpItems, lumpCard, lumpDc, lumpPtTot, lumpPtUse, lumpCash, lumpHp, lumpBenefits, subItems, subCardCorp, subCardTier, subCash, subHp, memoCust, memoMy
 };
 }
 
@@ -1118,6 +1132,8 @@ document.getElementById('l-dc').value = data.lumpDc || ''; document.getElementBy
 
 document.getElementById('lump-hp-container').innerHTML = '';
 if (data.lumpHp) data.lumpHp.forEach(hp => { addHpRow('lump'); const r = document.getElementById('lump-hp-container').lastElementChild; if(r){ r.querySelector('.hp-val').value = hp.val; r.querySelector('.hp-cnt').value = hp.cnt; } });
+document.getElementById('lump-benefit-container').innerHTML = '';
+if (data.lumpBenefits) data.lumpBenefits.forEach(b => { addLumpBenefitRow(); const r = document.getElementById('lump-benefit-container').lastElementChild; if(r){ r.querySelector('.b-type').value = b.type; r.querySelector('.b-desc').value = b.desc; r.querySelector('.b-val').value = b.val; } });
 
 document.getElementById('sub-inputs').innerHTML = '';
 if (data.subItems && data.subItems.length > 0) data.subItems.forEach(i => addSubRow(i.name, i.model, i.price, i.months)); else addSubRow();
@@ -1271,7 +1287,9 @@ if(HIPREED[v]) { lHpVal += HIPREED[v].lump * c; lHpMonth += HIPREED[v].monthly *
     const lPay = Math.max(0, lSum - lDcTotal - lPtUse - lHpVal);
     const lAutoCash = (lCardText === '미정(상담안함)') ? 0 : getAutoCashback(lPay); 
     const lExtraCashTotal = getVal('l-cash') + extraCash; 
-    const lNet = Math.max(0, lPay - lAutoCash - lExtraCashTotal);
+    const lNet_raw = lPay - lAutoCash - lExtraCashTotal;
+    const lNet = Math.max(0, lNet_raw);
+    window.currentNetPriceLump = lNet_raw;
     
     // Sheet 1 - Pay Table
     let s1PayRows = `<tr><td class="bg-gray-50 font-bold w-2/3">총 행사가 합계</td><td class="text-right font-bold text-gray-900">${format(lSum)} 원</td></tr>`;
@@ -1310,6 +1328,7 @@ if(HIPREED[v]) { lHpVal += HIPREED[v].lump * c; lHpMonth += HIPREED[v].monthly *
 
 
 const lhpPreview = document.getElementById('lump-hp-preview'); if(lhpPreview) lhpPreview.innerText = `${format(lHpMonth * 150)} 원 (${lHpCnt}건)`;
+const lhpMonthView = document.getElementById('lump-hp-month'); if(lhpMonthView) lhpMonthView.innerText = `월 ${format(lHpMonth)} 원`;
 
 let sMonthSum = 0; let sMonth36 = 0; let sMonth60 = 0; let sContract = 0; let s2Tbody = ''; let has60Month = false;
 document.querySelectorAll('.s-name').forEach((el, i) => {
@@ -1359,34 +1378,86 @@ setTxt('s2-month', format(sMonthSum) + ' 원'); setTxt('s2-card', sCardVal > 0 ?
 
 const formatMonthly = (billed, cashback, net) => {
     if (cashback > 0 || billed !== net) {
-        let netTxt = `월 ${format(Math.max(0, net))} 원`;
-        if (net < 0) netTxt = `월 0 원 <span class="text-[11px] block text-rose-500 font-normal mt-0.5">(매월 ${format(Math.abs(net))}원 혜택)</span>`;
+        let netTxt = `월 ${format(Math.max(0, net))} 원 <span class="text-[10px] font-normal text-gray-500">(체감가)</span>`;
+        if (net < 0) netTxt = `월 0 원 <span class="text-[10px] font-normal text-gray-500">(체감가)</span> <span class="text-[11px] block text-rose-500 font-normal mt-0.5">(매월 ${format(Math.abs(net))}원 혜택)</span>`;
         return `<div class="text-[11px] text-gray-500 font-normal leading-tight">실청구액: 월 ${format(billed)}원</div>
                 <div class="text-[11px] text-blue-500 font-normal leading-tight pb-0.5">캐시백 혜택: 월 ${format(cashback)}원</div>
-                <div class="text-base">${netTxt}</div>`;
+                <div class="text-base font-extrabold">${netTxt}</div>`;
     } else {
-        let netTxt = `월 ${format(Math.max(0, net))} 원`;
-        if (net < 0) netTxt = `월 0 원 <span class="text-[11px] block text-rose-500 font-normal mt-0.5">(매월 ${format(Math.abs(net))}원 혜택)</span>`;
-        return `<div class="text-base">${netTxt}</div>`;
+        let netTxt = `월 ${format(Math.max(0, net))} 원 <span class="text-[10px] font-normal text-gray-500">(체감가)</span>`;
+        if (net < 0) netTxt = `월 0 원 <span class="text-[10px] font-normal text-gray-500">(체감가)</span> <span class="text-[11px] block text-rose-500 font-normal mt-0.5">(매월 ${format(Math.abs(net))}원 혜택)</span>`;
+        return `<div class="text-base font-extrabold">${netTxt}</div>`;
     }
 };
 
-const p2Title = document.getElementById('s2-p2-title');
-if (p2Title) p2Title.innerText = sHpCnt > 0 ? "② 36개월 차 (상조 페이백 종료)" : "② 36개월 차";
-
-const elP1 = document.getElementById('s2-p1'); if(elP1) elP1.innerHTML = formatMonthly(p1_billed, p1_cashback, p1_raw);
-const elP2 = document.getElementById('s2-p2'); if(elP2) elP2.innerHTML = formatMonthly(p2_billed, p2_cashback, p2_raw);
-const rowP3 = document.getElementById('row-p3');
-if (sMonth60 > 0) {
-    if(rowP3) rowP3.classList.remove('hidden');
-    const elP3 = document.getElementById('s2-p3'); if(elP3) elP3.innerHTML = formatMonthly(p3_billed, p3_cashback, p3_raw);
-} else {
-    if(rowP3) rowP3.classList.add('hidden');
+const periods = [];
+let maxMonth = (sMonth60 > 0) ? 60 : (sMonth36 > 0 ? 36 : (sMonthSum > 0 ? 36 : 0));
+for (let m = 1; m <= maxMonth; m++) {
+    let billed = isBillingDiscount ? Math.max(0, (m <= 36 ? sMonthSum : sMonth60) - (m <= cardDuration ? sCardVal : 0)) : (m <= 36 ? sMonthSum : sMonth60);
+    let cashback = isBillingDiscount ? (m <= 35 ? sHpVal : 0) : ((m <= cardDuration ? sCardVal : 0) + (m <= 35 ? sHpVal : 0));
+    let raw = (m <= 36 ? sMonthSum : sMonth60) - (m <= cardDuration ? sCardVal : 0) - (m <= 35 ? sHpVal : 0);
+    periods.push({ m, billed, cashback, raw });
+}
+let merged = [];
+periods.forEach(p => {
+    if (merged.length > 0) {
+        let last = merged[merged.length - 1];
+        if (last.billed === p.billed && last.cashback === p.cashback && last.raw === p.raw) {
+            last.end = p.m;
+        } else {
+            merged.push({ start: p.m, end: p.m, billed: p.billed, cashback: p.cashback, raw: p.raw });
+        }
+    } else {
+        merged.push({ start: p.m, end: p.m, billed: p.billed, cashback: p.cashback, raw: p.raw });
+    }
+});
+const tbody = document.getElementById('s2-periods-tbody');
+if (tbody) {
+    tbody.innerHTML = merged.map((p, idx) => {
+        let title = `①`;
+        if (idx === 1) title = `②`;
+        if (idx === 2) title = `③`;
+        if (idx === 3) title = `④`;
+        let range = p.start === p.end ? `${p.start}개월 차` : `${p.start} ~ ${p.end}개월 차`;
+        let extra = '';
+        if (sHpCnt > 0 && p.start === 36) extra = ' (상조 페이백 종료)';
+        else if (p.start === 1 && p.end === 35) extra = ' (풀 혜택 적용)';
+        else if (p.start >= 37 && p.end === 60) extra = ' (60개월 약정 상품만 해당)';
+        
+        // Use different colors for different indexes to match previous design loosely
+        let colorClass = idx === 0 ? 'text-rose-700' : (idx === 1 ? 'text-orange-600' : 'text-gray-800');
+        
+        return `<tr><td class="bg-gray-100 font-bold text-gray-900">${title} ${range}${extra}</td><td class="text-right font-extrabold text-base ${colorClass}">${formatMonthly(p.billed, p.cashback, p.raw)}</td></tr>`;
+    }).join('');
 }
 
 let final_sub_txt = format(sNetTotal) + ' 원'; if (sNetTotal_raw < 0) final_sub_txt = `0 원 (총 ${format(Math.abs(sNetTotal_raw))} 원 혜택)`;
-setTxt('s2-contract', format(sContract) + ' 원'); setTxt('s2-auto-cash', sAutoCash > 0 ? '- ' + format(sAutoCash) + ' 원' : '0 원'); setTxt('s2-extra-cash', sExtraCash > 0 ? '- ' + format(sExtraCash) + ' 원' : '0 원'); setTxt('s2-final-total', final_sub_txt);
+setTxt('s2-contract', format(sContract) + ' 원'); 
+
+const tCardRow = document.getElementById('s2-tot-card-row');
+if (tCardRow) {
+    if (sCardVal > 0) { tCardRow.classList.remove('hidden'); setTxt('s2-tot-card', '- ' + format(sCardVal * cardDuration) + ' 원'); }
+    else { tCardRow.classList.add('hidden'); }
+}
+const tHpRow = document.getElementById('s2-tot-hp-row');
+if (tHpRow) {
+    if (sHpVal > 0) { tHpRow.classList.remove('hidden'); setTxt('s2-tot-hp', '- ' + format(sHpVal * 35) + ' 원'); }
+    else { tHpRow.classList.add('hidden'); }
+}
+const aCashRow = document.getElementById('s2-auto-cash-row');
+if (aCashRow) {
+    if (sAutoCash > 0) { aCashRow.classList.remove('hidden'); setTxt('s2-auto-cash', '- ' + format(sAutoCash) + ' 원'); }
+    else { aCashRow.classList.add('hidden'); }
+}
+const eCashRow = document.getElementById('s2-extra-cash-row');
+if (eCashRow) {
+    if (sExtraCash > 0) { eCashRow.classList.remove('hidden'); setTxt('s2-extra-cash', '- ' + format(sExtraCash) + ' 원'); }
+    else { eCashRow.classList.add('hidden'); }
+}
+
+setTxt('s2-final-total', final_sub_txt);
 const shpPreview = document.getElementById('sub-hp-preview'); if(shpPreview) shpPreview.innerText = `${format(sHpMonth * 150)} 원 (${sHpCnt}건)`;
+const shpMonthView = document.getElementById('sub-hp-month'); if(shpMonthView) shpMonthView.innerText = `월 ${format(sHpMonth)} 원`;
 
 setTxt('s3-t-lump', format(lSum) + ' 원'); setTxt('s3-t-sub', format(sContract) + ' 원');
 
@@ -1419,6 +1490,8 @@ const s4_total_raw = lNet + sNetTotal_raw;
 let s4_total_txt = format(Math.max(0, s4_total_raw)) + ' 원';
 if (s4_total_raw < 0) s4_total_txt = `0 원 (+${format(Math.abs(s4_total_raw))} 원 혜택)`;
 setTxt('s4-total', s4_total_txt);
+window.currentNetPriceSub = sNetTotal_raw;
+window.currentNetPriceTotal = s4_total_raw;
 
 setTxt('s5-cnt', lHpCnt + '구좌 가입'); setTxt('s5-month', format(lHpMonth) + ' 원 (1~150회)'); setTxt('s5-refund', format(lHpMonth * 150) + ' 원 (100% 환급)');
 setTxt('s6-cnt', sHpCnt + '구좌 가입'); setTxt('s6-month', format(sHpMonth) + ' 원 (1~150회)'); setTxt('s6-refund', format(sHpMonth * 150) + ' 원 (100% 환급)');
@@ -1518,7 +1591,7 @@ function resetQuotation() {
 document.querySelector('input[name="i-type"][value="일반"]').checked = true;
 ['i-name', 'i-c-phone', 'i-manager', 'i-no', 'l-dc', 'l-pt-tot', 'l-pt-use', 'l-cash', 's-cash', 'i-memo-customer', 'i-memo'].forEach(id => { const el=document.getElementById(id); if(el)el.value=''; });
 document.getElementById('i-phone').value = '031-767-1044';
-document.getElementById('lump-inputs').innerHTML = ''; addLumpRow(); document.getElementById('l-card').selectedIndex = 0; document.getElementById('lump-hp-container').innerHTML = '';
+document.getElementById('lump-inputs').innerHTML = ''; addLumpRow(); document.getElementById('l-card').selectedIndex = 0; document.getElementById('lump-hp-container').innerHTML = ''; document.getElementById('lump-benefit-container').innerHTML = '';
 document.getElementById('sub-inputs').innerHTML = ''; addSubRow(); document.getElementById('s-card-corp').value = 'none'; updateCardTiers(); document.getElementById('sub-hp-container').innerHTML = '';
 calc();
 currentEditingFolderId = null;
@@ -1678,7 +1751,7 @@ document.getElementById('manage-quote-modal').classList.add('hidden');
 showModal('AI 견적 비교 중... ✨', `${f.name} 고객님의 여러 견적서를 분석하고 최적의 제안을 찾고 있습니다.`, false);
 
 let quotesData = f.quotes.map((q, idx) => {
-  return `[견적 ${idx + 1}: ${q.title}]\n최종 체감가: ${q.data.netPrice || q.data.finalPrice}원\n할인액: ${q.data.lumpDc}원\n하이프리드: ${q.data.lumpHp ? q.data.lumpHp.map(h => h.val).join(',') : '없음'}`;
+  let nP = q.data.netPrice || q.data.finalPrice || 0; let npTxt = nP < 0 ? `0원 (+${format(Math.abs(nP))}원 혜택)` : `${format(nP)}원`; return `[견적 ${idx + 1}: ${q.title}]\n최종 체감가: ${npTxt}\n할인액: ${q.data.lumpDc}원\n하이프리드: ${q.data.lumpHp ? q.data.lumpHp.map(h => h.val).join(',') : '없음'}`;
 }).join('\n\n');
 
 try {

@@ -1,0 +1,8 @@
+    const lAutoCash = (lCardText === '미정(상담안함)') ? 0 : getAutoCashback(lPay); 
+    const lExtraCashTotal = getVal('l-cash') + extraCash; 
+    const lNet = Math.max(0, lPay - lAutoCash - lExtraCashTotal);
+    
+    // Sheet 1 - Pay Table
+    let s1PayRows = `<tr><td class="bg-gray-50 font-bold w-2/3">총 행사가 합계</td><td class="text-right font-bold text-gray-900">${format(lSum)} 원</td></tr>`;
+    if(lDc > 0) s1PayRows += `<tr><td class="bg-gray-50 text-gray-800">(-) 기본 즉시 할인액</td><td class="text-right text-rose-600">- ${format(lDc)} 원</td></tr>`;
+    benefitRows.filter(b=>b.type==='dc').forEach(b => {
