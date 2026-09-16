@@ -281,24 +281,32 @@ details > summary::-webkit-details-marker { display: none; }
 <div class="text-center mb-5 border-b-2 border-gray-800 pb-3">
 <h1 class="text-2xl font-extrabold text-gray-900">프리미엄 맞춤형 견적서 (일반)</h1>
 </div>
+<div class="overflow-x-auto">
 <table class="w-full print-table mb-4">
 <tr><th class="w-20">고객성명</th><td class="w-1/3 font-bold text-sm" id="s1-name"></td><th class="w-20">담당자</th><td class="w-1/3" id="s1-manager"></td></tr>
 <tr><th>전표/일자</th><td id="s1-no"></td><th>연락처/카드</th><td><span id="s1-phone"></span> <span id="s1-card" class="text-blue-700 font-bold ml-2"></span></td></tr>
 </table>
+</div>
 <h2 class="text-xs font-bold mb-1.5 text-gray-800">■ 상품 구매 내역</h2>
+<div class="overflow-x-auto">
 <table class="w-full print-table mb-4">
 <thead><tr><th class="w-[20%]">품목명</th><th class="w-[45%]">모델명</th><th class="w-[12%]">수량</th><th class="w-[23%]">금액(행사가)</th></tr></thead>
 <tbody id="s1-tbody"></tbody>
 </table>
+</div>
 <h2 class="text-xs font-bold mb-1.5 text-rose-700">■ 결제 및 혜택 내역</h2>
+<div class="overflow-x-auto">
 <table class="w-full print-table mb-2">
 <tbody id="s1-pay-tbody">
 </tbody>
 </table>
+</div>
+<div class="overflow-x-auto">
 <table class="w-full print-table mb-3">
 <tbody id="s1-cash-tbody">
 </tbody>
 </table>
+</div>
 
 <div id="s1-pt-container" class="text-right text-xs font-bold text-gray-600 mb-3 hidden">
 <p class="text-blue-700">L.POINT 잔액 (사용 후): <span id="s1-pt-remain" class="text-gray-900">0</span> P</p>
@@ -320,16 +328,21 @@ details > summary::-webkit-details-marker { display: none; }
 <div class="text-center mb-5 border-b-2 border-gray-800 pb-3">
 <h1 class="text-2xl font-extrabold text-gray-900">프리미엄 맞춤형 구독 견적서</h1>
 </div>
+<div class="overflow-x-auto">
 <table class="w-full print-table mb-4">
 <tr><th class="w-20">고객성명</th><td class="w-1/3 font-bold text-sm" id="s2-name"></td><th class="w-20">담당자</th><td class="w-1/3" id="s2-manager"></td></tr>
 <tr><th>전표/일자</th><td id="s2-no"></td><th>연락처/카드</th><td><span id="s2-phone"></span> <span id="s2-card-name" class="text-blue-700 font-bold ml-2"></span></td></tr>
 </table>
+</div>
 <h2 class="text-xs font-bold mb-1.5 text-gray-800">■ 구독 신청 상품 내역 (다품목 계약 명세)</h2>
+<div class="overflow-x-auto">
 <table class="w-full print-table mb-4">
 <thead><tr><th class="w-[18%]">품목명</th><th class="w-[36%]">모델명</th><th class="w-[14%]">약정기간</th><th class="w-[16%]">기본 월구독료</th><th class="w-[16%]">총계약금</th></tr></thead>
 <tbody id="s2-tbody"></tbody>
 </table>
+</div>
 <h2 class="text-xs font-bold mb-1.5 text-blue-700">■ 월납 및 캐시백 혜택 내역</h2>
+<div class="overflow-x-auto">
 <table class="w-full print-table mb-2">
 <tr><td class="bg-gray-50 font-bold w-2/3 text-gray-900">기본 월 구독료 합계 (1~36개월)</td><td class="text-right font-bold text-gray-900" id="s2-month">0 원</td></tr>
 <tr><td class="bg-gray-50 text-gray-800" id="s2-card-label">(-) 제휴카드 할인</td><td class="text-right text-blue-600" id="s2-card">0 원</td></tr>
@@ -337,6 +350,8 @@ details > summary::-webkit-details-marker { display: none; }
 <tr class="border-t-2 border-gray-400"><td class="bg-blue-50 font-extrabold text-blue-900 text-left" colspan="2">▼ 고객 체감 월 구독료 구간별 안내</td></tr>
 <tbody id="s2-periods-tbody"></tbody>
 </table>
+</div>
+<div class="overflow-x-auto">
 <table class="w-full print-table mb-3">
 <tr><td class="bg-gray-50 text-gray-800">전체 구독 총 계약금액</td><td class="text-right text-gray-900 font-bold" id="s2-contract">0 원</td></tr>
 <tr id="s2-tot-card-row" class="hidden"><td class="bg-gray-50 text-gray-800">(-) 제휴카드 총 혜택액</td><td class="text-right text-blue-600" id="s2-tot-card">0 원</td></tr>
@@ -345,6 +360,7 @@ details > summary::-webkit-details-marker { display: none; }
 <tr id="s2-extra-cash-row" class="hidden"><td class="bg-gray-50 text-gray-800">(-) 추가 캐시백 (배송익월말)</td><td class="text-right text-blue-600" id="s2-extra-cash">0 원</td></tr>
 <tr class="border-t-2 border-gray-400"><td class="bg-gray-100 font-extrabold text-gray-900">★ 고객 약정만기 총 체감 순비용</td><td class="text-right font-extrabold text-xl text-rose-700" id="s2-final-total">0 원</td></tr>
 </table>
+</div>
 
 <div class="space-y-1.5 mb-4">
 <div class="notice-box">📌 <b>제휴카드 및 품목별 약정안내:</b> 각 품목의 약정기간(36개월/60개월) 만료 시 소유권이 이전됩니다. 제휴카드 할인(36개월 한정) 및 캐시백은 전월 실적 조건 충족 시 정상 적용됩니다.</div>
@@ -362,6 +378,7 @@ details > summary::-webkit-details-marker { display: none; }
 <div class="text-center mb-5 border-b-2 border-gray-800 pb-3">
 <h1 class="text-2xl font-extrabold text-gray-900">일반 vs 구독 종합 비교 견적</h1>
 </div>
+<div class="overflow-x-auto">
 <table class="w-full print-table mb-4">
 <thead><tr><th class="w-[28%]">비교 항목</th><th class="w-[36%] text-rose-700">일반 구매 (일시불)</th><th class="w-[36%] text-blue-700">구독 구매 (분할납부)</th></tr></thead>
 <tbody>
@@ -372,6 +389,7 @@ details > summary::-webkit-details-marker { display: none; }
 <tr class="bg-gray-100 border-t-2 border-gray-400"><td class="font-extrabold text-gray-900">★ 고객 체감 순비용</td><td class="text-right font-extrabold text-2xl text-rose-700" id="s3-net-lump">0 원</td><td class="text-right font-extrabold text-2xl text-blue-700" id="s3-net-sub">0 원</td></tr>
 </tbody>
 </table>
+</div>
 <div class="space-y-1.5 mb-4">
 <div class="notice-box">📌 일반 결제는 구매 시점의 초기 목돈 부담을 최소화하며, 구독 결제는 초기 비용 0원으로 월 부담을 분산할 수 있습니다.</div>
 <div id="s3-hp-warning" class="warning-box hidden">⚠️ 하이프리드(웅진프리드라이프) 결합 지원금은 35회차 이내 해지 시 잔여 할부금 및 표준약관 해약환급금이 적용됩니다. (150개월 만기 완납 시 100% 전액 환급)</div>
@@ -388,6 +406,7 @@ details > summary::-webkit-details-marker { display: none; }
 <div class="text-center mb-5 border-b-2 border-gray-800 pb-3">
 <h1 class="text-2xl font-extrabold text-gray-900">일반 + 구독 패키지 동시 진행 견적</h1>
 </div>
+<div class="overflow-x-auto">
 <table class="w-full print-table mb-4">
 <tbody>
 <tr><td class="font-bold bg-gray-50 w-1/2 text-gray-900">▶ 일반 구매 체감 순비용</td><td class="text-right text-lg font-bold text-gray-900" id="s4-lump">0 원</td></tr>
@@ -395,6 +414,7 @@ details > summary::-webkit-details-marker { display: none; }
 <tr class="border-t-2 border-gray-800"><td class="font-extrabold text-lg bg-gray-100 text-gray-900">★ 동시진행 합산 최종 체감비용 ★</td><td class="text-right font-extrabold text-2xl text-rose-600" id="s4-total">0 원</td></tr>
 </tbody>
 </table>
+</div>
 <div class="space-y-1.5 mb-4">
 <div class="notice-box">📌 대형 핵심가전(일반 일시불) + 생활/위생가전(구독 월납)을 혼합하여 월 예산에 최적화된 패키지입니다.</div>
 <div id="s4-hp-warning" class="warning-box hidden">⚠️ 하이프리드(웅진프리드라이프) 혜택은 150개월 완납 시 전액 환급됩니다.</div>
@@ -458,6 +478,7 @@ details > summary::-webkit-details-marker { display: none; }
 </div>
 
 <h2 class="text-xs font-bold mb-1.5 text-gray-800">■ 롯데하이마트 제휴카드 청구서 표기 원리 <span class="font-normal text-gray-500">(안내 예시 : 하이프리드 300 기준)</span></h2>
+<div class="overflow-x-auto">
 <table class="w-full print-table mb-4 text-center">
 <thead><tr><th class="w-[20%]">가맹점명</th><th class="w-[20%]">이용금액</th><th class="w-[15%]">할부정보</th><th class="w-[25%]">이용혜택(가전구매지원)</th><th class="w-[20%]">실제 청구액</th></tr></thead>
 <tbody>
@@ -465,6 +486,7 @@ details > summary::-webkit-details-marker { display: none; }
 <tr><td class="font-bold bg-gray-50 text-gray-700">프리드라이프</td><td class="font-bold">132,000</td><td>-</td><td class="text-rose-600 font-bold">- 93,892</td></tr>
 </tbody>
 </table>
+</div>
 <p class="text-[10px] text-gray-500 text-right mb-3 mt-1">* 상기 예시는 하이프리드 300 (4구좌) 가입 시 월 회비 132,000원에서 가전할부금 93,892원이 할인(지원) 상쇄되는 표기 방식입니다.</p>
 
 <div class="warning-box mb-3">
