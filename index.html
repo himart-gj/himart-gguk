@@ -179,7 +179,7 @@ details > summary::-webkit-details-marker { display: none; }
 
 <div class="pt-3 mt-2 border-t border-rose-200">
 <div class="flex justify-between items-center mb-2">
-<span class="text-xs font-bold text-rose-800">기타 혜택 (상품권, 추가할인 등)</span>
+<span class="text-xs font-bold text-rose-800">추가혜택</span>
 <button type="button" onclick="addLumpBenefitRow()" class="text-xs bg-rose-100 border border-rose-300 text-rose-700 px-2 py-0.5 rounded shadow-sm">+ 혜택추가</button>
 </div>
 <div id="lump-benefit-container" class="space-y-1 mb-2"></div>
@@ -287,9 +287,8 @@ details > summary::-webkit-details-marker { display: none; }
 </tbody>
 </table>
 
-<div class="text-right text-xs font-bold text-gray-600 mb-3">
-<p class="mb-0.5">총 적립포인트: <span id="s1-pt-tot-view" class="text-gray-900">0</span> P</p>
-<p class="text-blue-700">포인트 잔액 (사용 후): <span id="s1-pt-remain">0</span> P</p>
+<div id="s1-pt-container" class="text-right text-xs font-bold text-gray-600 mb-3 hidden">
+<p class="text-blue-700">L.POINT 잔액 (사용 후): <span id="s1-pt-remain" class="text-gray-900">0</span> P</p>
 </div>
 
 <div class="space-y-1.5 mb-4">
@@ -1098,7 +1097,7 @@ const memoCust = document.getElementById('i-memo-customer')?.value || '';
 const memoMy = document.getElementById('i-memo')?.value || '';
 return {
 id: 'Q-' + Date.now(), type, name, cPhone, phone, manager, no, itemSummary: itemSummary || '가전 견적',
-totalPrice: parseInt(document.getElementById('s1-total')?.innerText.replace(/[^0-9]/g, '') || 0),payPrice: parseInt(document.getElementById('s1-pay')?.innerText.replace(/[^0-9]/g, '') || 0),finalPrice: parseInt(document.getElementById('s1-pay')?.innerText.replace(/[^0-9]/g, '') || 0),netPrice: parseInt(document.getElementById('s1-final')?.innerText.replace(/[^0-9]/g, '') || 0),lumpSum: parseInt(document.getElementById('s1-total')?.innerText.replace(/[^0-9]/g, '') || 0),subSum: parseInt(document.getElementById('s1-total')?.innerText.replace(/[^0-9]/g, '') || 0),
+totalPrice: 0, payPrice: 0, finalPrice: parseInt(document.getElementById(type === '일반' ? 's3-net-lump' : 's3-net-sub')?.innerText.replace(/[^0-9]/g, '') || 0), netPrice: parseInt(document.getElementById(type === '일반' ? 's3-net-lump' : 's3-net-sub')?.innerText.replace(/[^0-9]/g, '') || 0), lumpSum: 0, subSum: 0,
 lumpItems, lumpCard, lumpDc, lumpPtTot, lumpPtUse, lumpCash, lumpHp, subItems, subCardCorp, subCardTier, subCash, subHp, memoCust, memoMy
 };
 }
@@ -1185,10 +1184,8 @@ const div = document.createElement('div');
 div.className = "flex gap-1 mb-1 items-center benefit-lump-row";
 div.innerHTML = `
 <select class="input-box w-[30%] text-[10px] b-type" onchange="calc()">
-<option value="cashback">추가 캐시백</option>
-<option value="gift">상품권</option>
-<option value="naver">네이버포인트 적립</option>
-<option value="discount">추가즉시할인</option>
+<option value="discount">즉시할인</option>
+<option value="etc">기타</option>
 </select>
 <input type="text" class="input-box w-[35%] text-[10px] b-desc" placeholder="내용 (선택)" oninput="calc()">
 <input type="number" class="input-box w-[25%] text-xs text-right b-val" placeholder="0" oninput="calc()">
@@ -1257,21 +1254,15 @@ if(HIPREED[v]) { lHpVal += HIPREED[v].lump * c; lHpMonth += HIPREED[v].monthly *
 
     document.querySelectorAll('.benefit-lump-row').forEach(row => {
         const type = row.querySelector('.b-type').value;
-        const desc = row.querySelector('.b-desc').value || (type==='cashback'?'추가 캐시백':type==='gift'?'상품권':type==='naver'?'네이버포인트':'추가 즉시할인');
+        const desc = row.querySelector('.b-desc').value || (type==='discount'?'즉시할인':'기타');
         const val = parseInt(row.querySelector('.b-val').value) || 0;
         if(val > 0) {
-            if(type === 'discount') {
+            if(type === 'discount' || type === 'dc') {
                 extraDc += val;
                 benefitRows.push({type: 'dc', desc, val});
-            } else if(type === 'cashback') {
+            } else {
                 extraCash += val;
-                benefitRows.push({type: 'cash', desc, val});
-            } else if(type === 'gift') {
-                extraCash += val;
-                benefitRows.push({type: 'gift', desc, val});
-            } else if(type === 'naver') {
-                extraCash += val;
-                benefitRows.push({type: 'naver', desc, val});
+                benefitRows.push({type: 'etc', desc, val});
             }
         }
     });
@@ -1298,20 +1289,25 @@ if(HIPREED[v]) { lHpVal += HIPREED[v].lump * c; lHpMonth += HIPREED[v].monthly *
     let s1CashRows = '';
     if(lAutoCash > 0) s1CashRows += `<tr><td class="bg-gray-50 text-gray-800">(-) 결제금액별 자동 캐시백</td><td class="text-right text-blue-600">- ${format(lAutoCash)} 원</td></tr>`;
     if(getVal('l-cash') > 0) s1CashRows += `<tr><td class="bg-gray-50 text-gray-800">(-) 기본 추가 캐시백</td><td class="text-right text-blue-600">- ${format(getVal('l-cash'))} 원</td></tr>`;
-    benefitRows.filter(b=>b.type==='cash').forEach(b => {
-        s1CashRows += `<tr><td class="bg-gray-50 text-gray-800">(-) [캐시백] ${b.desc}</td><td class="text-right text-blue-600">- ${format(b.val)} 원</td></tr>`;
-    });
-    benefitRows.filter(b=>b.type==='gift').forEach(b => {
-        s1CashRows += `<tr><td class="bg-gray-50 text-gray-800">(-) [상품권] ${b.desc}</td><td class="text-right text-green-600">- ${format(b.val)} 원</td></tr>`;
-    });
-    benefitRows.filter(b=>b.type==='naver').forEach(b => {
-        s1CashRows += `<tr><td class="bg-gray-50 text-gray-800">(-) [네이버포인트] ${b.desc}</td><td class="text-right text-green-600">- ${format(b.val)} 원</td></tr>`;
+    benefitRows.filter(b=>b.type==='etc').forEach(b => {
+        s1CashRows += `<tr><td class="bg-gray-50 text-gray-800">(-) [추가혜택] ${b.desc}</td><td class="text-right text-blue-600">- ${format(b.val)} 원</td></tr>`;
     });
     s1CashRows += `<tr class="border-t-2 border-gray-400"><td class="bg-gray-100 font-extrabold text-gray-900">★ 고객 체감 순비용</td><td class="text-right font-extrabold text-xl text-rose-700">${format(lNet)} 원</td></tr>`;
     
     document.getElementById('s1-cash-tbody').innerHTML = s1CashRows;
 
-    setTxt('s1-pt-tot-view', format(lPtTot)); setTxt('s1-pt-remain', format(Math.max(0, lPtTot - lPtUse)));
+    
+    const lPtRemain = Math.max(0, lPtTot - lPtUse);
+    const ptCont = document.getElementById('s1-pt-container');
+    if (ptCont) {
+        if (lPtRemain <= 0) {
+            ptCont.classList.add('hidden');
+        } else {
+            ptCont.classList.remove('hidden');
+            setTxt('s1-pt-remain', format(lPtRemain));
+        }
+    }
+
 
 const lhpPreview = document.getElementById('lump-hp-preview'); if(lhpPreview) lhpPreview.innerText = `${format(lHpMonth * 150)} 원 (${lHpCnt}건)`;
 
